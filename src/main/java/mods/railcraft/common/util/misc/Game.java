@@ -62,7 +62,7 @@ public final class Game {
         Object obj = Launch.blackboard.get("fml.deobfuscatedEnvironment");
         System.out.println(obj);
         OBFUSCATED = !(obj instanceof Boolean && ((Boolean) obj));
-        DEVELOPMENT_VERSION = Railcraft.getVersion().matches(".*(alpha|beta|rc).*") || !OBFUSCATED;
+        DEVELOPMENT_VERSION = false;
         boolean foundBukkit = false;
         try {
             foundBukkit = Class.forName("org.spigotmc.SpigotConfig") != null;
@@ -226,11 +226,6 @@ public final class Game {
                 }
             }
         }
-
-        @Override
-        public void fingerprint(String mod) {
-            msg(Level.FATAL, "{0} failed validation, terminating. Please re-download {0} from an official source.", mod);
-        }
     }
 
     /**
@@ -262,7 +257,5 @@ public final class Game {
         default void debug(String msg, Object... args) {}
 
         default void api(String mod, Throwable error, Class<?>... classFiles) {}
-
-        default void fingerprint(String mod) {}
     }
 }
