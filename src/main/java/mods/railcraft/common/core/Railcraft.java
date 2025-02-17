@@ -34,7 +34,6 @@ import java.io.File;
 @SuppressWarnings("unused")
 @Mod(modid = Railcraft.MOD_ID, name = Railcraft.NAME,
         version = Railcraft.VERSION,
-        certificateFingerprint = "e6a8a8ac4ca5fc62762c53f9555020bec36419ba",
         acceptedMinecraftVersions = Railcraft.MC_VERSION,
         guiFactory = "mods.railcraft.client.core.RailcraftGuiConfigFactory",
         updateJSON = "http://www.railcraft.info/railcraft_versions",
@@ -95,14 +94,6 @@ public final class Railcraft {
                 Game.log().msg(Level.FATAL, "Failed to interpret IMC message from mod {0} with key {1}", message.getSender(), message.key);
                 throw ex;
             }
-        }
-    }
-
-    @Mod.EventHandler
-    public void fingerprintError(FMLFingerprintViolationEvent event) {
-        if (Game.isObfuscated()) {
-            Game.log().fingerprint(MOD_ID);
-            throw new RuntimeException("Invalid Fingerprint");
         }
     }
 
