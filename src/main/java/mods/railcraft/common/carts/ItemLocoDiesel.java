@@ -10,20 +10,16 @@
 
 package mods.railcraft.common.carts;
 
-import buildcraft.api.BCBlocks;
-import buildcraft.api.BCBlocks.Core;
-import buildcraft.api.BCItems;
+import ic2.api.item.ITeBlockSpecialItem;
 import mods.railcraft.client.render.carts.LocomotiveRenderType;
 import mods.railcraft.common.blocks.RailcraftBlocks;
-import mods.railcraft.common.blocks.charge.BlockBattery;
-import mods.railcraft.common.items.ItemCharge;
 import mods.railcraft.common.items.ItemGear;
 import mods.railcraft.common.items.Metal;
 import mods.railcraft.common.items.RailcraftItems;
-import mods.railcraft.common.plugins.buildcraft.BuildcraftPlugin;
 import mods.railcraft.common.plugins.color.EnumColor;
 import mods.railcraft.common.plugins.forge.CraftingPlugin;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -40,16 +36,26 @@ public class ItemLocoDiesel extends ItemLocomotive {
     @Override
     public void defineRecipes() {
         super.defineRecipes();
+
+        Item ic2te = Item.getByNameOrId("ic2:te");
+        ItemStack generatorStack = ItemStack.EMPTY;
+
+        if (ic2te != null) {
+            generatorStack = new ItemStack(ic2te, 1, 7);
+        }
+
         // TODO: make a recipe
-        CraftingPlugin.addShapedRecipe(getStack(),
+        if (!generatorStack.isEmpty()) {
+            CraftingPlugin.addShapedRecipe(getStack(),
                  "LD ",
                  "TBT",
                  "GMG",
                  'L', Blocks.REDSTONE_LAMP,
-                 'D', new ItemStack(Core.ENGINE, 1, 2), // ДВС из BuildCraft
+                 'D', generatorStack,
                  'B', RailcraftBlocks.GLASS,
                  'M', Items.MINECART,
                  'G', RailcraftItems.GEAR, ItemGear.EnumGear.STEEL,
                  'T', RailcraftItems.PLATE, Metal.STEEL);
+        }
     }
 }
