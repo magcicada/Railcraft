@@ -3,11 +3,18 @@
 
 name: Java CI with Gradle
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ "mc-1.12.2" ]
+  pull_request:
+    branches: [ "mc-1.12.2" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -22,6 +29,10 @@ jobs:
           java-version: '8'
           cache: 'gradle'
 
+      - name: Get short SHA
+        id: slug
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -33,3 +44,17 @@ jobs:
         with:
           name: Railcraft-1.12.2
           path: build/distributions
+
+      - name: Update Latest Nightly Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest_nightly
+          name: "Build: ${{ steps.slug.outputs.sha_short }}"
+          files: |
+            build/distributions/*.jar
+          overwrite: true
+          make_latest: true
+          generate_release_notes: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
