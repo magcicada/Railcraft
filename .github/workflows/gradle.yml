@@ -45,16 +45,28 @@ jobs:
           name: Railcraft-1.12.2
           path: build/distributions
 
+      - name: Update Nightly Tag
+        run: |
+          git tag -f nightly
+          git push -f origin nightly
+
       - name: Update Latest Nightly Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest_nightly
+          tag_name: nightly
           name: "Build: ${{ steps.slug.outputs.sha_short }}"
+          body: |
+            ## Nightly Build Details
+            - **Commit SHA**: `${{ github.sha }}`
+            - **Branch**: `${{ github.ref_name }}`
+            - **Timestamp**: $(date +'%Y-%m-%d %H:%M:%S')
+            
+            [View Full Changes](https://github.com/${{ github.repository }}/commits/mc-1.12.2)
           files: |
             build/distributions/*.jar
           overwrite: true
           make_latest: true
-          generate_release_notes: true
+          generate_release_notes: false
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
